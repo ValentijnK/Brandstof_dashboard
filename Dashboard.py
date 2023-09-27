@@ -11,10 +11,10 @@ st.set_page_config(
 df = pd.read_csv('data.csv', delimiter=';')
 
 # Rename Columns
-column_names = ['Motorbrandstof', 'Perioden', 'gemiddelde_pompprijs', 'prijs_snelweg_bemand',
+column_names = ['motorbrandstof', 'perioden', 'gemiddelde_pompprijs', 'prijs_snelweg_bemand',
                 'prijs_niet_snelweg_bemand', 'prijs_niet_snelweg_onbemand']
 df.columns = column_names
-
+st.dataframe(df)
 # Prices > floats
 df['gemiddelde_pompprijs'] = df['gemiddelde_pompprijs'].str.replace(',', '.')
 df['gemiddelde_pompprijs'] = df['gemiddelde_pompprijs'].astype(float)
@@ -25,28 +25,32 @@ df['prijs_niet_snelweg_bemand'] = df['prijs_niet_snelweg_bemand'].astype(float)
 df['prijs_niet_snelweg_onbemand'] = df['prijs_niet_snelweg_onbemand'].str.replace(',', '.')
 df['prijs_niet_snelweg_onbemand'] = df['prijs_niet_snelweg_onbemand'].astype(float)
 
+# Drop rows with the average price
+df = df.drop(df[df['perioden'].isin(['2022', '2023'])].index)
+
 # Convert months to decimal values
-df['Perioden'] = df['Perioden'].str.replace(' ', '')
-df['Perioden'] = df['Perioden'].str.replace('januari', '-01')
-df['Perioden'] = df['Perioden'].str.replace('februari', '-02')
-df['Perioden'] = df['Perioden'].str.replace('maart', '-03')
-df['Perioden'] = df['Perioden'].str.replace('april', '-04')
-df['Perioden'] = df['Perioden'].str.replace('mei', '-05')
-df['Perioden'] = df['Perioden'].str.replace('juni', '-06')
-df['Perioden'] = df['Perioden'].str.replace('juli', '-07')
-df['Perioden'] = df['Perioden'].str.replace('augustus', '-08')
-df['Perioden'] = df['Perioden'].str.replace('september', '-09')
-df['Perioden'] = df['Perioden'].str.replace('oktober', '-10')
-df['Perioden'] = df['Perioden'].str.replace('november', '-11')
-df['Perioden'] = df['Perioden'].str.replace('december', '-12')
+df['perioden'] = df['perioden'].str.replace(' ', '')
+df['perioden'] = df['perioden'].str.replace('januari', '-01')
+df['perioden'] = df['perioden'].str.replace('februari', '-02')
+df['perioden'] = df['perioden'].str.replace('maart', '-03')
+df['perioden'] = df['perioden'].str.replace('april', '-04')
+df['perioden'] = df['perioden'].str.replace('mei', '-05')
+df['perioden'] = df['perioden'].str.replace('juni', '-06')
+df['perioden'] = df['perioden'].str.replace('juli', '-07')
+df['perioden'] = df['perioden'].str.replace('augustus', '-08')
+df['perioden'] = df['perioden'].str.replace('september', '-09')
+df['perioden'] = df['perioden'].str.replace('oktober', '-10')
+df['perioden'] = df['perioden'].str.replace('november', '-11')
+df['perioden'] = df['perioden'].str.replace('december', '-12')
 
 # Convert string > datetime datatype
-df['Perioden'] = pd.to_datetime(df['Perioden'], format='%Y-%m')
+df['perioden'] = pd.to_datetime(df['perioden'], format='%Y-%m')
 
 # Subset the dataframe to split fuels
-df_benzine = df[df['Motorbrandstof'] == 'Benzine Euro95']
-df_diesel = df[df['Motorbrandstof'] == 'Diesel']
-df_lpg = df[df['Motorbrandstof'] == 'Lpg']
+df_benzine = df[df['motorbrandstof'] == 'Benzine Euro95']
+df_diesel = df[df['motorbrandstof'] == 'Diesel']
+df_lpg = df[df['motorbrandstof'] == 'Lpg']
 
+st.dataframe(df_benzine)
 
-# st.line_chart(data=df_benzine, x='Perioden', y='gemiddelde_pompprijs')
+# st.line_chart(data=df_benzine, x='perioden', y='gemiddelde_pompprijs')
